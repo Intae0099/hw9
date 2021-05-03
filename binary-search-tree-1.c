@@ -127,66 +127,143 @@ int initializeBST(Node** h) {
 
 void inorderTraversal(Node* ptr)
 {
+	if(ptr)
+	{
+		inorderTraversal(ptr->left);
+		printf("[ %d ]\t", ptr->key);
+		inorderTraversal(ptr->right);
+	}
 
 }
 
 void preorderTraversal(Node* ptr)
 {
-
+	if(ptr)
+	{
+		printf("[ %d ]\t", ptr->key);
+		preorderTraversal(ptr->left);
+		preorderTraversal(ptr->right);
+	}
 }
 
 void postorderTraversal(Node* ptr)
 {
-
+	if(ptr)
+	{
+		postorderTraversal(ptr->left);
+		postorderTraversal(ptr->right);
+		printf("[ %d ]\t", ptr->key);
+	}
 }
 
 
 int insert(Node* head, int key)
 {
 	Node* newNode = (Node*)malloc(sizeof(Node));
-	Node* temp = head;
-	Node* prev = NULL;
+	Node* temp = head->left;
+	Node* parent = NULL;
 
 	newNode->key = key;
 	newNode -> left = NULL;
 	newNode -> right = NULL;
 
 	
-	if(head == NULL)
+	if(temp == NULL)
 	{
 		head ->left = newNode;
 		return 0;
-	}	
+	}
+	
 	while(temp != NULL)
 	{
-		if(temp->key < key)
+		if(temp->key > key)
 		{
-			prev = temp;
+			parent = temp;
 			temp = temp->left;
 			if(temp == NULL)
 			{
-				prev->left = newNode;
+				parent->left = newNode;
 				return 0;
 			}
 		}
 		else
 		{
-			prev = temp;
+			parent = temp;
 			temp = temp->right;
 			if(temp == NULL)
 			{
-				prev->right = newNode;
+				parent->right = newNode;
 				return 0;
 			}
 
 		}
 	}
-
+	return 0;
 }
 
 int deleteLeafNode(Node* head, int key)
 {
+	Node* temp = head->left;
+	Node* parent = NULL;
 
+	if(temp->key == key)
+	{
+		if(temp->right == NULL && temp->left == NULL)
+		{
+			head->left = NULL;
+			free(temp);
+			return 0;
+		}
+	}
+	while(temp != NULL)
+	{
+		parent = temp;
+		if(temp->key > key)
+		{
+			if(temp->left != NULL)
+			{
+				temp = temp->left;
+
+				if(temp->key == key)
+				{
+					if(temp->right == NULL && temp->left == NULL)
+					{
+						parent->left = NULL;
+						free(temp);
+						return 0;
+					}
+					else
+					{
+						printf("ERROR");
+						return 0;
+					}
+				}
+			}
+		}
+		else if (temp->key < key)
+		{
+			if(temp->right != NULL)
+			{
+				temp = temp->right;
+			
+				if(temp->key == key)
+				{
+					if(temp->right == NULL && temp->left == NULL)
+					{
+						parent->right = NULL;
+						free(temp);
+						return 0;
+					}
+					else
+					{
+						printf("ERROR");
+						return 0;
+					}
+				}	
+			}
+		}
+	}
+	return 0;
 }
 
 Node* searchRecursive(Node* ptr, int key)
