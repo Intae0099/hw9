@@ -123,45 +123,38 @@ int initializeBST(Node** h) {
 	return 1;
 }
 
-/*
-inorderTraversal은 재귀함수 이며, 함수 실행시
-트리의 가장 아래 레벨의 왼쪽으로 이동하고 출력한 후, 그 노드의 ptr->right값이 NULL일경우 그 함수를 마치고, 그 전함수로 돌아와 실행한다.
-그러면 가장 아래 래벨의 바로위에 있는 조상으로 이동해 그 노드의 값을 출력하고, 오른쪽 자식이 있는지 확인한다.
-있는경우 함수를 다시 실행해 출력을 마치며, 
-*/
 void inorderTraversal(Node* ptr) //중위 순회로 키값을 출력한다
 {
 	if(ptr) //ptr의 값이 NULL이 아닐때 조건문 실행
 	{
-		inorderTraversal(ptr->left); //inorderTraversal을 ptr의 왼쪽 자식으로 노드를 전달해 재귀함수를 사용한다
-		printf("[ %d ]\t", ptr->key); //가장 아래 레벨의 자손에 왼쪽값을 출력한다
-		inorderTraversal(ptr->right); //inorderTraversal을 ptr의 오른쪽 자식으로 노드를 전달해 재귀함수를 사용한다
+		inorderTraversal(ptr->left); //inorderTraversal을 ptr의 왼쪽 자식으로 노드를 전달해 재귀함수를 호출
+		printf("[ %d ]\t", ptr->key); /*가장 아래 레벨의 자손에 왼쪽값을 출력후 그 노드의 부모노드로 올라와 부모노드를 출력한다.
+		부모노드의 오른쪽 자식노드가 있을 시 오른쪽 자식노드 출력 후 부모노드의 부모노드로 올라가 같은방식으로 출력*/
+		inorderTraversal(ptr->right); //inorderTraversal을 ptr의 오른쪽 자식으로 노드를 전달해 재귀함수를 호출
 	}
 
 }
-/*
 
-*/
-void preorderTraversal(Node* ptr)
+void preorderTraversal(Node* ptr) //전위 순회로 키값을 출력한다
 {
-	if(ptr)
+	if(ptr) //ptr의 값이 NULL이 아닐때 조건문 실행
 	{
-		printf("[ %d ]\t", ptr->key);
-		preorderTraversal(ptr->left);
-		preorderTraversal(ptr->right);
+		printf("[ %d ]\t", ptr->key); //루트노드 부터 출력하며, 왼쪽 자식노드를 순서대로 출력후 가장 아래에 있는 오른쪽 자식노드부토 루트노드로 올라오며 출력
+		preorderTraversal(ptr->left); //preorderTraversal을 ptr의 왼쪽 자식으로 노드를 전달해 재귀함수를 호출
+		preorderTraversal(ptr->right); //preorderTraversal을 ptr의 오른쪽 자식으로 노드를 전달해 재귀함수를 호출
 	}
 }
 
-void postorderTraversal(Node* ptr)
+void postorderTraversal(Node* ptr) //후위 순회로 키값을 출력한다
 {
-	if(ptr)
+	if(ptr) //ptr의 값이 NULL이 아닐때 조건문 실행
 	{
-		postorderTraversal(ptr->left);
-		postorderTraversal(ptr->right);
-		printf("[ %d ]\t", ptr->key);
+		postorderTraversal(ptr->left); //postorderTraversal를 ptr의 왼쪽 자식으로 노드를 전달해 재귀함수를 호출
+		postorderTraversal(ptr->right); //postorderTraversal를 ptr의 오른쪽 자식으로 노드를 전달해 재귀함수를 호출
+		printf("[ %d ]\t", ptr->key); /*가장 아래있는 왼쪽 자식노드를 가 먼저 출력하고 그 노드의 부모노드의 오른쪽 자식이 있을 경우 오른쪽 자식노드도 출력한다
+		그 다음 부모노드로 올라가 같은 방식으로 출력한다.*/
 	}
 }
-
 
 int insert(Node* head, int key)
 {
@@ -307,11 +300,19 @@ Node* searchIterative(Node* head, int key)
 
 int freeBST(Node* head)
 {
-	if(head != NULL)
-	{
-		freeBST(head->left);
-		freeBST(head->right);
-		free(head);
-	}
+	Node* temp = head->left; //루트노드를 temp에 불러온다
+
+	freeNode(temp); //temp를 freeNode 함수로 이동시켜 
+	free(head);
 	return 0;
+}
+
+void freeNode(Node* ptr) //후위 순회 방식으로 노드할당 해제
+{
+	if(ptr != NULL) //ptr이 NULL이 아닐경우
+	{
+		freeNode(ptr->left); //ptr의 왼쪽 자식으로 이동한 후 freeNode를 재귀함수로 호출
+		freeNode(ptr->right); //ptr의 오른쪽 자식으로 이동한 후 freeNode를 재귀함수로 호출
+		free(ptr); //ptr을 동적할당 해제를 통해 노드 삭제
+	}
 }
