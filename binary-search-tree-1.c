@@ -270,7 +270,7 @@ int deleteLeafNode(Node* head, int key)
 	return 0; //0리턴을 통해 함수 종료
 }
 
-Node* searchRecursive(Node* ptr, int key)
+Node* searchRecursive(Node* ptr, int key) //순환법으로 key값이 있는 노드 탑색
 {
 	if(!ptr) //ptr이 아닐경우
 		return NULL; //NULL리턴으로 함수종료
@@ -281,7 +281,7 @@ Node* searchRecursive(Node* ptr, int key)
 	return searchRecursive(ptr->right, key); //ptr의 오른쪽 자식으로 이동하고, searchRecursive 재귀함수로 부른다.
 }
 
-Node* searchIterative(Node* head, int key)
+Node* searchIterative(Node* head, int key) //반복법으로 key값이 있는 노드 탐색
 {
 	Node* temp = head->left; //temp노드를 루트 노드로 설정
 	
